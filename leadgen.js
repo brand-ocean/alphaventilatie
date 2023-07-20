@@ -249,5 +249,3 @@ checkboxContainer.addEventListener("change", function (event) {
     isOneWeek = isDeliveryTimeOneWeek;
   }
 });
-</script>
-
