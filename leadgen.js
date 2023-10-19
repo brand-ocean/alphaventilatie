@@ -1,3 +1,60 @@
+document.addEventListener("DOMContentLoaded", function() {
+
+  // Function to handle logic for MV radio buttons
+  function handleMVRadioButtons(name) {
+    const radioButtonsMV = document.querySelectorAll(`input[type="radio"][name="${name}"][price]`);
+    const priceDisplayMV = document.querySelector('[data-field="pakketprijs"]');
+
+    // Set the initial price for MV based on the checked radio button
+    radioButtonsMV.forEach(function(radioButton) {
+      if (radioButton.checked) {
+        const selectedPrice = radioButton.getAttribute('price');
+        priceDisplayMV.textContent = selectedPrice;
+      }
+    });
+
+    // Add an event listener to the radio buttons for MV
+    radioButtonsMV.forEach(function(radioButton) {
+      radioButton.addEventListener("change", function() {
+        const selectedPrice = this.getAttribute('price');
+        priceDisplayMV.textContent = selectedPrice;
+      });
+    });
+  }
+
+  // Handle the radio buttons for both names
+  handleMVRadioButtons("pakket_mv-vervangen");
+  handleMVRadioButtons("pakket_mv-onderhoud");
+  handleMVRadioButtons("pakket_wtw-onderhoud");
+
+  const radioButtonsGarantie = document.querySelectorAll('input[type="radio"][name="pakket_garantie"][price]');
+  const priceDisplayGarantie = document.querySelector('[data-field="garantieprijs"]');
+
+  // Add an event listener to the radio buttons for "pakket_garantie"
+  radioButtonsGarantie.forEach(function(radioButton) {
+    radioButton.addEventListener("change", function() {
+      const selectedPrice = this.getAttribute('price');
+      priceDisplayGarantie.textContent = selectedPrice;
+    });
+  });
+
+  const wirelessInput = document.querySelector('[data-input="wireless"]');
+  const priceDisplayWireless = document.querySelector('[data-field="wireless"]');
+
+  wirelessInput.addEventListener("input", function() {
+    const inputValue = parseInt(wirelessInput.value, 10);
+    
+    if (!isNaN(inputValue)) {
+      const calculatedPrice = inputValue * 70;
+      priceDisplayWireless.textContent = '€' + calculatedPrice;
+    } else {
+      priceDisplayWireless.textContent = '';
+    }
+  });
+});
+
+
+
 const checkboxContainer = document.querySelector(".checkbox-container");
 const messageElements = document.querySelectorAll(".message, [data-show='levertijd']");
 const lottieContainer = document.querySelector("#lottie-container");
