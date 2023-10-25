@@ -1,11 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-  // Function to handle logic for MV radio buttons
   function handleMVRadioButtons(name) {
     const radioButtonsMV = document.querySelectorAll(`input[type="radio"][name="${name}"][price]`);
     const priceDisplayMV = document.querySelector('[data-field="pakketprijs"]');
 
-    // Set the initial price for MV based on the checked radio button
     radioButtonsMV.forEach(function(radioButton) {
       if (radioButton.checked) {
         const selectedPrice = radioButton.getAttribute('price');
@@ -13,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     });
 
-    // Add an event listener to the radio buttons for MV
     radioButtonsMV.forEach(function(radioButton) {
       radioButton.addEventListener("change", function() {
         const selectedPrice = this.getAttribute('price');
@@ -22,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Handle the radio buttons for both names
   handleMVRadioButtons("pakket_mv-vervangen");
   handleMVRadioButtons("pakket_mv-onderhoud");
   handleMVRadioButtons("pakket_wtw-onderhoud");
@@ -30,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function() {
   const radioButtonsGarantie = document.querySelectorAll('input[type="radio"][name="pakket_garantie"][price]');
   const priceDisplayGarantie = document.querySelector('[data-field="garantieprijs"]');
 
-  // Add an event listener to the radio buttons for "pakket_garantie"
   radioButtonsGarantie.forEach(function(radioButton) {
     radioButton.addEventListener("change", function() {
       const selectedPrice = this.getAttribute('price');
