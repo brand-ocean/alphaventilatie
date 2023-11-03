@@ -49,8 +49,30 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
+  // Handle value change for pakket_garantie radio button
+  radioButtonsGarantie.forEach(radioButton => {
+    radioButton.addEventListener('change', function() {
+      var garantieprijsField = document.querySelector('[data-field="garantieprijs"]');
+      if (this.value === 'Nee, niet nodig') {
+        garantieprijsField.style.display = 'none';    // Hide
+      } else {
+        garantieprijsField.style.display = 'block';   // Show
+      }
+    });
+  });
+  
+  // Handle value change for dropdown input
+  const dropdownInput = document.querySelector('[data-field="dropdown"]');
+  dropdownInput.addEventListener('change', function() {
+    const wirelessField = document.querySelector('[data-field="wireless"]');
+    if (this.value === 'Nee' || this.value === 'Ik beslis later') {
+      wirelessField.style.display = 'none';   // Hide
+    } else {
+      wirelessField.style.display = 'block';  // Show
+    }
+  });
 
-const checkboxContainer = document.querySelector(".checkbox-container");
+  const checkboxContainer = document.querySelector(".checkbox-container");
 const messageElements = document.querySelectorAll(".message, [data-show='levertijd']");
 const lottieContainer = document.querySelector("#lottie-container");
 
