@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-
+  // Function to handle MV radio buttons
   function handleMVRadioButtons(name) {
     const radioButtonsMV = document.querySelectorAll(`input[type="radio"][name="${name}"][price]`);
     const priceDisplayMV = document.querySelector('[data-field="pakketprijs"]');
@@ -9,9 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const selectedPrice = radioButton.getAttribute('price');
         priceDisplayMV.textContent = selectedPrice;
       }
-    });
 
-    radioButtonsMV.forEach(function(radioButton) {
       radioButton.addEventListener("change", function() {
         const selectedPrice = this.getAttribute('price');
         priceDisplayMV.textContent = selectedPrice;
@@ -19,34 +17,62 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
+  // Initialize MV radio buttons
   handleMVRadioButtons("pakket_mv-vervangen");
   handleMVRadioButtons("pakket_mv-onderhoud");
   handleMVRadioButtons("pakket_wtw-onderhoud");
 
+  // Function to update the display of garantie price
+  function updateGarantiePriceDisplay(selectedPrice) {
+    if (selectedPrice === '€0') {
+      priceDisplayGarantie.style.display = 'none';
+    } else {
+      priceDisplayGarantie.style.display = '';
+      priceDisplayGarantie.textContent = selectedPrice;
+    }
+  }
+
+  // Set up the garantie radio buttons
   const radioButtonsGarantie = document.querySelectorAll('input[type="radio"][name="pakket_garantie"][price]');
   const priceDisplayGarantie = document.querySelector('[data-field="garantieprijs"]');
-
   radioButtonsGarantie.forEach(function(radioButton) {
     radioButton.addEventListener("change", function() {
-      const selectedPrice = this.getAttribute('price');
-      priceDisplayGarantie.textContent = selectedPrice;
+      updateGarantiePriceDisplay(this.getAttribute('price'));
     });
+
+    if (radioButton.checked) {
+      updateGarantiePriceDisplay(radioButton.getAttribute('price'));
+    }
   });
 
+  // Select wireless input and display field
   const wirelessInput = document.querySelector('[data-input="wireless"]');
   const priceDisplayWireless = document.querySelector('[data-field="wireless"]');
 
-  wirelessInput.addEventListener("input", function() {
-    const inputValue = parseInt(wirelessInput.value, 10);
-    
-    if (!isNaN(inputValue)) {
-      const calculatedPrice = inputValue * 70;
-      priceDisplayWireless.textContent = '€' + calculatedPrice;
+  // Function to update the display of wireless price
+  function updateWirelessPriceDisplay(inputValue) {
+    if (inputValue.trim() === '') {
+      priceDisplayWireless.style.display = 'none'; // Hide if empty
     } else {
-      priceDisplayWireless.textContent = '';
+      const calculatedPrice = parseInt(inputValue, 10) * 70;
+      if (!isNaN(calculatedPrice)) {
+        priceDisplayWireless.style.display = ''; // Show when not empty
+        priceDisplayWireless.textContent = '€' + calculatedPrice;
+      } else {
+        priceDisplayWireless.textContent = '';
+      }
     }
+  }
+
+  // Add input event listener to wireless input
+  wirelessInput.addEventListener("input", function() {
+    updateWirelessPriceDisplay(wirelessInput.value);
   });
+
+  // Immediately apply the correct display state on page load for wireless
+  updateWirelessPriceDisplay(wirelessInput.value);
 });
+
 
 
 
