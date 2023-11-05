@@ -1,38 +1,28 @@
 document.addEventListener("DOMContentLoaded", function() {
-  // Function to handle MV radio buttons
   function handleMVRadioButtons(name) {
     const radioButtonsMV = document.querySelectorAll(`input[type="radio"][name="${name}"][price]`);
     const priceDisplayMV = document.querySelector('[data-field="pakketprijs"]');
 
     radioButtonsMV.forEach(function(radioButton) {
       if (radioButton.checked) {
-        const selectedPrice = radioButton.getAttribute('price');
-        priceDisplayMV.textContent = selectedPrice;
+        priceDisplayMV.textContent = radioButton.getAttribute('price');
       }
 
       radioButton.addEventListener("change", function() {
-        const selectedPrice = this.getAttribute('price');
-        priceDisplayMV.textContent = selectedPrice;
+        priceDisplayMV.textContent = this.getAttribute('price');
       });
     });
   }
 
-  // Initialize MV radio buttons
   handleMVRadioButtons("pakket_mv-vervangen");
   handleMVRadioButtons("pakket_mv-onderhoud");
   handleMVRadioButtons("pakket_wtw-onderhoud");
 
-  // Function to update the display of garantie price
   function updateGarantiePriceDisplay(selectedPrice) {
-    if (selectedPrice === '€0') {
-      priceDisplayGarantie.style.display = 'none';
-    } else {
-      priceDisplayGarantie.style.display = '';
-      priceDisplayGarantie.textContent = selectedPrice;
-    }
+    priceDisplayGarantie.style.display = selectedPrice === '€0' ? 'none' : '';
+    priceDisplayGarantie.textContent = selectedPrice !== '€0' ? selectedPrice : '';
   }
 
-  // Set up the garantie radio buttons
   const radioButtonsGarantie = document.querySelectorAll('input[type="radio"][name="pakket_garantie"][price]');
   const priceDisplayGarantie = document.querySelector('[data-field="garantieprijs"]');
   radioButtonsGarantie.forEach(function(radioButton) {
@@ -45,36 +35,25 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
-  // Select wireless input and display field
   const wirelessInput = document.querySelector('[data-input="wireless"]');
   const priceDisplayWireless = document.querySelector('[data-field="wireless"]');
 
-  // Function to update the display of wireless price
   function updateWirelessPriceDisplay(inputValue) {
     if (inputValue.trim() === '') {
-      priceDisplayWireless.style.display = 'none'; // Hide if empty
+      priceDisplayWireless.style.display = 'none';
     } else {
       const calculatedPrice = parseInt(inputValue, 10) * 70;
-      if (!isNaN(calculatedPrice)) {
-        priceDisplayWireless.style.display = ''; // Show when not empty
-        priceDisplayWireless.textContent = '€' + calculatedPrice;
-      } else {
-        priceDisplayWireless.textContent = '';
-      }
+      priceDisplayWireless.style.display = calculatedPrice ? '' : 'none';
+      priceDisplayWireless.textContent = calculatedPrice ? '€' + calculatedPrice : '';
     }
   }
 
-  // Add input event listener to wireless input
   wirelessInput.addEventListener("input", function() {
     updateWirelessPriceDisplay(wirelessInput.value);
   });
 
-  // Immediately apply the correct display state on page load for wireless
   updateWirelessPriceDisplay(wirelessInput.value);
 });
-
-
-
 
 const checkboxContainer = document.querySelector(".checkbox-container");
 const messageElements = document.querySelectorAll(".message, [data-show='levertijd']");
@@ -92,8 +71,9 @@ function calculateDeliveryTime(numChecked) {
 }
 
 function updateMessage(deliveryTime) {
-  const messageText = deliveryTime ? `Maximale wachttijd: ${deliveryTime}` : originalMessage;
-  messageElements.forEach((element) => (element.textContent = messageText));
+  messageElements.forEach((element) => {
+    element.textContent = deliveryTime ? `Maximale wachttijd: ${deliveryTime}` : originalMessage;
+  });
 }
 
 checkboxContainer.addEventListener("change", function (event) {
@@ -138,9 +118,9 @@ const debounce = (fn, delay) => {
 };
 
 const isValidPostcode = (postcode) => /^[0-9]{4}[a-zA-Z]{2}$/.test(postcode);
-const setAdresPlaceholder = (text) => (adresInput.placeholder = text);
-const resetAdresInput = () => (adresInput.value = "");
-const updateAddressDisplay = (address) => (addressDisplay.innerText = address);
+const setAdresPlaceholder = (text) => adresInput.placeholder = text;
+const resetAdresInput = () => adresInput.value = "";
+const updateAddressDisplay = (address) => addressDisplay.innerText = address;
 
 const getAddress = async (postcode, number) => {
   const response = await fetch(`${BASE_URL}?postcode=${postcode}&number=${number}`, {
@@ -155,10 +135,8 @@ const getAddress = async (postcode, number) => {
 const fetchData = async () => {
   const inputPostcodeValue = inputPostcode.value;
   const huisnummerValue = huisnummerInput.value;
-
   const baseNumberMatch = huisnummerValue.match(/^(\d+)/);
   const baseNumber = baseNumberMatch ? baseNumberMatch[0] : null;
-
   const addition = huisnummerValue.replace(baseNumber, '').trim();
 
   if (!inputPostcodeValue || !baseNumber) {
@@ -169,7 +147,6 @@ const fetchData = async () => {
 
   try {
     const { street, number, postcode, city } = await getAddress(inputPostcodeValue, baseNumber);
-    
     const fullNumber = addition ? `${number}${addition}` : number;
     const addressText = `${street} ${fullNumber}, ${postcode}, ${city}`;
 
@@ -187,7 +164,6 @@ const fetchData = async () => {
 
 inputPostcode.addEventListener("input", async () => {
   const inputPostcodeValue = inputPostcode.value;
-
   if (!isValidPostcode(inputPostcodeValue)) {
     setAdresPlaceholder("Vul je postcode op de volgende manier in: 1111AA");
     resetAdresInput();
@@ -199,15 +175,11 @@ inputPostcode.addEventListener("input", async () => {
 });
 
 huisnummerInput.addEventListener("input", debounce(fetchData, 500));
-inputPostcode.addEventListener("focus", () =>
-  setAdresPlaceholder(defaultAdresPlaceholder)
-);
+inputPostcode.addEventListener("focus", () => setAdresPlaceholder(defaultAdresPlaceholder));
 
 const handleDropdownChange = (dropdown, inputField, targetValue) => {
-  if (dropdown.value === targetValue) {
-    inputField.classList.remove("hide");
-  } else {
-    inputField.classList.add("hide");
+  inputField.classList.toggle("hide", dropdown.value !== targetValue);
+  if (dropdown.value !== targetValue) {
     inputField.value = "";
   }
 };
@@ -227,13 +199,8 @@ wirelessControl.addEventListener("change", () =>
 inputField.classList.add("hide");
 wirelessControlQuantity.classList.add("hide");
 
-
-const buttons = Array.from(
-  document.querySelectorAll('[data-form="next-btn"], [scroll-up="true"]')
-);
+const buttons = Array.from(document.querySelectorAll('[data-form="next-btn"], [scroll-up="true"]'));
 
 buttons.forEach((button) =>
-  button.addEventListener("click", () =>
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  )
+  button.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }))
 );
